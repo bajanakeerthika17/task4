@@ -1,0 +1,310 @@
+{% extends "base.html" %}
+
+{% block head_extra %}
+<link rel="stylesheet" href="/static/css/dashboard.css">
+{% endblock %}
+
+{% block content %}
+<div class="dashboard-layout">
+  <!-- Top Navigation Bar -->
+  <header class="dash-navbar">
+    <a href="/dashboard" class="nav-brand">
+      <img src="/static/img/logo.svg" alt="SecureAuth Shield">
+      <span class="nav-brand-text">SecureAuth <span style="font-size: 0.72rem; color: #10b981; font-weight: 500; border: 1px solid rgba(16, 185, 129, 0.4); padding: 2px 6px; border-radius: 4px; margin-left: 4px;">ENTERPRISE</span></span>
+    </a>
+
+    <div class="nav-actions">
+      <div class="user-badge">
+        <div class="user-avatar" id="user-avatar-initials">{{ user.name[0] if user and user.name else "U" }}</div>
+        <span class="user-display-name" id="user-display-name">{{ user.name if user else "User" }}</span>
+      </div>
+
+      <button class="logout-btn btn-trigger-logout" title="Sign out of your session">
+        <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+        </svg>
+        <span>Logout</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Dashboard Content -->
+  <main class="dash-content">
+    <!-- Welcome Banner -->
+    <section class="welcome-card">
+      <div class="welcome-info">
+        <h1>Welcome, <span id="user-full-name" style="background: linear-gradient(135deg, #fff 0%, #34d399 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">{{ user.name if user else "User" }}</span>!</h1>
+        <p>Your session is active and protected under zero-trust enterprise security standards.</p>
+        <div class="security-status-pill">
+          <span class="status-dot"></span>
+          <span>Zero-Trust Shield Active • HTTP-Only Session</span>
+        </div>
+      </div>
+      <div style="text-align: right; color: var(--text-muted); font-size: 0.82rem; display: flex; flex-direction: column; gap: 0.25rem;">
+        <div>Account: <strong id="user-email" style="color: #cbd5e1;">{{ user.email if user else "" }}</strong></div>
+        <div>Member Since: <strong id="stat-member-since" style="color: #cbd5e1;">-</strong></div>
+        <div>Last Access: <strong id="stat-last-login" style="color: #cbd5e1;">-</strong></div>
+      </div>
+    </section>
+
+    <!-- Stat Cards Overview -->
+    <section class="stats-grid">
+      <!-- 2FA Card -->
+      <div class="stat-card">
+        <div>
+          <div class="stat-header">
+            <span class="stat-title">Two-Factor Auth (2FA)</span>
+            <div class="stat-icon">
+              <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 11c0 3.517-1.009 6.799-2.753 9.571m-3.44-2.04l.054-.09A13.916 13.916 0 008 11a4 4 0 118 0c0 1.017-.07 2.019-.203 3m-2.118 6.844A21.88 21.88 0 0015.171 17m3.839 1.132c.645-2.266.99-4.659.99-7.132A8 8 0 004 11m0 0c0 2.473.345 4.866.99 7.132" /></svg>
+            </div>
+          </div>
+          <div class="stat-value" id="2fa-status-badge">Checking...</div>
+          <div class="stat-desc" id="2fa-stat-desc">Time-based One-Time Password (TOTP)</div>
+        </div>
+      </div>
+
+      <!-- Password Encryption Card -->
+      <div class="stat-card">
+        <div>
+          <div class="stat-header">
+            <span class="stat-title">Password Hashing</span>
+            <div class="stat-icon">
+              <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>
+            </div>
+          </div>
+          <div class="stat-value" style="color: var(--primary);">Bcrypt / Argon2</div>
+          <div class="stat-desc">12-round salted cryptographic hash</div>
+        </div>
+      </div>
+
+      <!-- Active Sessions Card -->
+      <div class="stat-card">
+        <div>
+          <div class="stat-header">
+            <span class="stat-title">Connected Devices</span>
+            <div class="stat-icon">
+              <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>
+            </div>
+          </div>
+          <div class="stat-value" id="stat-active-sessions" style="color: #38bdf8;">1 Active</div>
+          <div class="stat-desc">Cryptographically signed tokens</div>
+        </div>
+      </div>
+
+      <!-- Brute Force Protection Card -->
+      <div class="stat-card">
+        <div>
+          <div class="stat-header">
+            <span class="stat-title">Brute-Force Guard</span>
+            <div class="stat-icon">
+              <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" /></svg>
+            </div>
+          </div>
+          <div class="stat-value" style="color: var(--success);">Armed & Active</div>
+          <div class="stat-desc">Sliding-window IP & Account lockout</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Main Dashboard Panels -->
+    <div class="dashboard-panels">
+      <!-- Left Panel: Security Settings & Password Update -->
+      <div class="panel-card">
+        <div class="panel-title-area">
+          <div class="panel-title">
+            <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+            <span>Security Configuration</span>
+          </div>
+        </div>
+
+        <!-- 2FA Setting Row -->
+        <div class="security-setting-item">
+          <div class="setting-info">
+            <h4>Two-Factor Authentication</h4>
+            <p>Require a 6-digit TOTP code on login via Google Authenticator or Authy.</p>
+          </div>
+          <div>
+            <button id="btn-enable-2fa" class="btn-secondary" style="display: none;">
+              <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+              <span>Enable 2FA</span>
+            </button>
+            <button id="btn-disable-2fa" class="btn-danger" style="display: none;">
+              <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"/></svg>
+              <span>Disable 2FA</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Change Password Form -->
+        <div style="margin-top: 1.5rem; padding-top: 1.25rem; border-top: 1px solid rgba(255, 255, 255, 0.06);">
+          <h4 style="font-size: 0.95rem; font-weight: 600; color: #fff; margin-bottom: 0.4rem;">Update Password</h4>
+          <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 1.25rem;">
+            Changing your password will automatically invalidate all other active sessions across devices.
+          </p>
+
+          <form id="change-password-form" class="auth-form" style="gap: 1rem;">
+            <div class="form-group">
+              <label for="current-password" class="form-label">Current Password</label>
+              <div class="input-container">
+                <input type="password" id="current-password" class="form-input" placeholder="Current password" required>
+                <button type="button" class="input-toggle-btn" data-target="current-password">
+                  <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                </button>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="new-password" class="form-label">New Password</label>
+              <div class="input-container">
+                <input type="password" id="new-password" class="form-input" placeholder="Min. 8 chars, uppercase, number & symbol" required>
+                <button type="button" class="input-toggle-btn" data-target="new-password">
+                  <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                </button>
+              </div>
+              <div class="strength-bar-bg" style="margin-top: 0.35rem;">
+                <div id="pwd-change-strength" class="strength-bar-fill"></div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="confirm-new-password" class="form-label">Confirm New Password</label>
+              <div class="input-container">
+                <input type="password" id="confirm-new-password" class="form-input" placeholder="Re-enter new password" required>
+                <button type="button" class="input-toggle-btn" data-target="confirm-new-password">
+                  <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                </button>
+              </div>
+            </div>
+
+            <button type="submit" class="btn-primary" style="margin-top: 0.5rem;">
+              <span>Update Password</span>
+            </button>
+          </form>
+        </div>
+      </div>
+
+      <!-- Right Panel: Active Sessions Manager -->
+      <div class="panel-card">
+        <div class="panel-title-area">
+          <div class="panel-title">
+            <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+            <span>Active Sessions</span>
+          </div>
+          <button id="btn-revoke-others" class="btn-danger" style="font-size: 0.76rem; padding: 0.35rem 0.75rem;">
+            <span>Revoke Other Sessions</span>
+          </button>
+        </div>
+
+        <div id="sessions-container" style="display: flex; flex-direction: column; gap: 0.5rem;">
+          <p style="color: var(--text-muted); font-size: 0.85rem;">Loading active sessions...</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Security Audit Trail Table -->
+    <section class="panel-card">
+      <div class="panel-title-area">
+        <div class="panel-title">
+          <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/></svg>
+          <span>Security Audit Trail & Activity Log</span>
+        </div>
+      </div>
+
+      <div class="audit-table-wrapper">
+        <table class="audit-table">
+          <thead>
+            <tr>
+              <th>Event</th>
+              <th>Timestamp</th>
+              <th>IP Address</th>
+              <th>Details</th>
+            </tr>
+          </thead>
+          <tbody id="audit-table-body">
+            <tr>
+              <td colspan="4" style="text-align: center; color: var(--text-muted); padding: 1.5rem;">Loading audit trail...</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+</div>
+
+<!-- Modal: Setup 2FA -->
+<div class="modal-overlay" id="modal-2fa-setup">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3>Set Up Two-Factor Authentication</h3>
+      <button class="modal-close-btn">&times;</button>
+    </div>
+
+    <p style="font-size: 0.84rem; color: var(--text-muted); margin-bottom: 0.5rem;">
+      Scan this QR code using Google Authenticator, Authy, or Microsoft Authenticator:
+    </p>
+
+    <div class="qr-code-wrapper">
+      <img id="qr-code-img" src="" alt="2FA QR Code">
+    </div>
+
+    <p style="font-size: 0.78rem; color: var(--text-muted); text-align: center; margin-bottom: 0.4rem;">
+      Or enter this key manually in your authenticator app:
+    </p>
+    <div class="secret-key-box" id="secret-key-text"></div>
+
+    <form id="form-confirm-2fa" class="auth-form" style="gap: 1rem;">
+      <div class="form-group">
+        <label for="setup-2fa-code" class="form-label">Enter 6-Digit Code to Confirm</label>
+        <div class="input-container">
+          <input 
+            type="text" 
+            id="setup-2fa-code" 
+            class="form-input" 
+            placeholder="000000" 
+            maxlength="6" 
+            pattern="[0-9]{6}" 
+            inputmode="numeric"
+            style="text-align: center; letter-spacing: 0.3em; font-size: 1.2rem; font-weight: 700;"
+            required
+          >
+        </div>
+      </div>
+
+      <button type="submit" class="btn-primary">
+        <span>Verify & Activate 2FA</span>
+      </button>
+    </form>
+  </div>
+</div>
+
+<!-- Modal: Disable 2FA -->
+<div class="modal-overlay" id="modal-2fa-disable">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3>Disable Two-Factor Authentication</h3>
+      <button class="modal-close-btn">&times;</button>
+    </div>
+
+    <p style="font-size: 0.84rem; color: #fca5a5; margin-bottom: 1.25rem;">
+      Warning: Disabling 2FA lowers your account's defense against unauthorized access. Please enter your account password to confirm.
+    </p>
+
+    <form id="form-disable-2fa" class="auth-form" style="gap: 1rem;">
+      <div class="form-group">
+        <label for="disable-2fa-password" class="form-label">Account Password</label>
+        <div class="input-container">
+          <input type="password" id="disable-2fa-password" class="form-input" placeholder="Your password" required>
+        </div>
+      </div>
+
+      <button type="submit" class="btn-danger" style="width: 100%; justify-content: center; padding: 0.8rem;">
+        <span>Confirm & Disable 2FA</span>
+      </button>
+    </form>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="/static/js/dashboard.js"></script>
+{% endblock %}

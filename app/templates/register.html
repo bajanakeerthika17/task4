@@ -1,0 +1,168 @@
+{% extends "base.html" %}
+
+{% block content %}
+<main class="auth-wrapper">
+  <div class="auth-card">
+    <div class="brand-header">
+      <img src="/static/img/logo.svg" alt="SecureAuth Shield" class="brand-logo">
+      <h1 class="brand-title">Create Account</h1>
+      <p class="brand-subtitle">Set up your secure, protected account</p>
+    </div>
+
+    <form id="register-form" class="auth-form" novalidate>
+      <!-- Full Name Field -->
+      <div class="form-group">
+        <label for="reg-name" class="form-label">Full Name</label>
+        <div class="input-container">
+          <svg class="input-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+          </svg>
+          <input 
+            type="text" 
+            id="reg-name" 
+            name="name" 
+            class="form-input" 
+            placeholder="Jane Doe" 
+            autocomplete="name"
+            required
+          >
+        </div>
+        <div class="field-error-msg" id="name-error"></div>
+      </div>
+
+      <!-- Email Field -->
+      <div class="form-group">
+        <label for="reg-email" class="form-label">Email Address</label>
+        <div class="input-container">
+          <svg class="input-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207" />
+          </svg>
+          <input 
+            type="email" 
+            id="reg-email" 
+            name="email" 
+            class="form-input" 
+            placeholder="jane.doe@example.com" 
+            autocomplete="email"
+            required
+          >
+        </div>
+        <div class="field-error-msg" id="email-error"></div>
+      </div>
+
+      <!-- Password Field -->
+      <div class="form-group">
+        <label for="reg-password" class="form-label">Password</label>
+        <div class="input-container">
+          <svg class="input-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+          </svg>
+          <input 
+            type="password" 
+            id="reg-password" 
+            name="password" 
+            class="form-input" 
+            placeholder="Create a strong password" 
+            autocomplete="new-password"
+            required
+          >
+          <button type="button" class="input-toggle-btn" data-target="reg-password" aria-label="Toggle password view">
+            <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+            </svg>
+          </button>
+        </div>
+
+        <!-- Real-time Password Strength Meter -->
+        <div class="strength-meter-container">
+          <div class="strength-bar-bg">
+            <div id="strength-bar" class="strength-bar-fill"></div>
+          </div>
+          <div class="strength-text">
+            <span>Security Strength</span>
+            <span id="strength-text">Enter password</span>
+          </div>
+        </div>
+
+        <!-- Live Password Requirements Checklist -->
+        <div class="req-checklist">
+          <div class="req-item invalid" id="req-length">
+            <svg class="req-icon" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg>
+            <span>8+ Characters</span>
+          </div>
+          <div class="req-item invalid" id="req-upper">
+            <svg class="req-icon" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg>
+            <span>Uppercase (A-Z)</span>
+          </div>
+          <div class="req-item invalid" id="req-lower">
+            <svg class="req-icon" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg>
+            <span>Lowercase (a-z)</span>
+          </div>
+          <div class="req-item invalid" id="req-number">
+            <svg class="req-icon" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg>
+            <span>Number (0-9)</span>
+          </div>
+          <div class="req-item invalid" id="req-special" style="grid-column: span 2;">
+            <svg class="req-icon" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg>
+            <span>Special Symbol (!@#$%^&* etc.)</span>
+          </div>
+        </div>
+
+        <div class="field-error-msg" id="password-error"></div>
+      </div>
+
+      <!-- Confirm Password Field -->
+      <div class="form-group">
+        <label for="reg-confirm-password" class="form-label">Confirm Password</label>
+        <div class="input-container">
+          <svg class="input-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+          </svg>
+          <input 
+            type="password" 
+            id="reg-confirm-password" 
+            name="confirm_password" 
+            class="form-input" 
+            placeholder="Re-enter your password" 
+            autocomplete="new-password"
+            required
+          >
+          <button type="button" class="input-toggle-btn" data-target="reg-confirm-password" aria-label="Toggle password view">
+            <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+            </svg>
+          </button>
+        </div>
+        <div class="field-error-msg" id="confirm-password-error"></div>
+      </div>
+
+      <!-- Submit Button -->
+      <button type="submit" class="btn-primary" id="btn-register-submit">
+        <span class="btn-spinner"></span>
+        <span class="btn-text">Create Secure Account</span>
+        <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+        </svg>
+      </button>
+    </form>
+
+    <div class="auth-footer">
+      Already have an account? 
+      <a href="/login" class="auth-link">Sign In</a>
+    </div>
+
+    <div class="security-notice">
+      <svg class="security-notice-icon" width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+      </svg>
+      <span>Passwords hashed with Bcrypt 12-round salt • Zero plain-text storage</span>
+    </div>
+  </div>
+</main>
+{% endblock %}
+
+{% block scripts %}
+<script src="/static/js/auth.js"></script>
+{% endblock %}

@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none">
+  <defs>
+    <linearGradient id="shieldGrad" x1="10" y1="10" x2="90" y2="90" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#10b981" />
+      <stop offset="50%" stop-color="#06b6d4" />
+      <stop offset="100%" stop-color="#3b82f6" />
+    </linearGradient>
+    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="3" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+  </defs>
+  <!-- Shield Outline -->
+  <path d="M50 8L18 22V50C18 70 32 86 50 92C68 86 82 70 82 50V22L50 8Z" 
+        fill="url(#shieldGrad)" fill-opacity="0.15" stroke="url(#shieldGrad)" stroke-width="4" stroke-linejoin="round" />
+  <!-- Center Keyhole / Lock -->
+  <circle cx="50" cy="46" r="10" stroke="#10b981" stroke-width="3" fill="#0f172a" />
+  <path d="M47 52L45 68H55L53 52" stroke="#10b981" stroke-width="3" fill="#10b981" />
+  <circle cx="50" cy="45" r="4" fill="#10b981" />
+</svg>
